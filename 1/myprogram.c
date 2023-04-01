@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	bool is_zero_buffer = false;
 	size_t read_bytes_total = 0;
     while (true){
-    	ssize_t read_bytes_in_buffer_count = 0;
+    	size_t read_bytes_in_buffer_count = 0;
 		while (read_bytes_in_buffer_count < buffer_size){
 			ssize_t read_bytes_count = read(fileno(input),
 					buffer + read_bytes_in_buffer_count, 
