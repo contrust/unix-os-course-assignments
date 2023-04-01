@@ -5,10 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void usage(char *argv0){
+static void print_usage(char *argv0){
 	printf("Usage: %s [-b block_size] (output_file | input_file output_file)\n", argv0);
-	exit(1);
 }
+
+static void close_file(FILE * file){
+	if (file != NULL && fclose(file)){
+		fprintf(stderr, "ERROR: can't close the file: %s\n", strerror(errno));		
+	}
+}
+
 
 static bool is_numeric(const char *str)
 {
@@ -34,18 +40,21 @@ int main(int argc, char* argv[])
 			case 'b':
 				if (!is_numeric(optarg)){
 					fprintf(stderr, "ERROR: the b parameter is not numeric.\n");
-					usage(argv[0]);
+					print_usage(argv[0]);
+					return 1;
 				}
 				buffer_size = atoi(optarg);
 				break;
 			default:
-				usage(argv[0]);
+				print_usage(argv[0]);
+				return 1;
 		}
 	}
 
 	if (optind >= argc){
 		fprintf(stderr, "ERROR: missing name arguments.\n");
-		usage(argv[0]);
+		print_usage(argv[0]);
+		return 1;
 	} else if (optind == argc - 1){
 		input = stdin;
 		output = fopen(argv[optind], "w");
@@ -63,11 +72,15 @@ int main(int argc, char* argv[])
 		}
 	} else {
 		fprintf(stderr, "ERROR: extra name arguments.\n");
-		usage(argv[0]);
+		print_usage(argv[0]);
+		return 1;
 	}
 
 	if (input == NULL || output == NULL){
-		usage(argv[0]);
+		print_usage(argv[0]);
+		close_file(input);
+		close_file(output);
+		return 1;
 	}
 
 	char buffer[buffer_size];
@@ -81,7 +94,9 @@ int main(int argc, char* argv[])
 					buffer_size - read_bytes_in_buffer_count);
 	       	if (read_bytes_count == -1){
 				fprintf(stderr, "ERROR: can't read: %s\n", strerror(errno));
-				exit(1);
+				close_file(input);
+				close_file(output);
+				return 1;
 			}
 			else if (read_bytes_count == 0)
 				break;
@@ -101,18 +116,25 @@ int main(int argc, char* argv[])
 		if (is_zero_buffer){
 			if (lseek(fileno(output), read_bytes_in_buffer_count, SEEK_CUR) == -1){
 				fprintf(stderr, "ERROR: can't seek: %s\n", strerror(errno));
-				exit(1);
+				close_file(input);
+				close_file(output);
+				return 1;
 			}
 		} else {
 			if (write(fileno(output), buffer, read_bytes_in_buffer_count) == -1){
 				fprintf(stderr, "ERROR: can't write: %s\n", strerror(errno));
-				exit(1);
+				close_file(input);
+				close_file(output);
+				return 1;
 			}
 		}
 	}
+	close_file(input);
 	if (ftruncate(fileno(output), read_bytes_total) == -1){
 		fprintf(stderr, "ERROR: can't truncate: %s\n", strerror(errno));
-		exit(1);	
-	}
+		close_file(output);
+		return 1;
+	}	
+	close_file(output);
     return 0;
 }
