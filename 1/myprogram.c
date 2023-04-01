@@ -7,6 +7,7 @@
 
 static void usage(char *argv0){
 	printf("Usage: %s [-b block_size] (output_file | input_file output_file)\n", argv0);
+	exit(1);
 }
 
 static bool is_numeric(const char *str)
@@ -26,7 +27,6 @@ int main(int argc, char* argv[])
 {
 	FILE *input, *output;
 	size_t buffer_size = 4096;
-	char buffer[buffer_size];
 	int opt = 1;
 
 	while ((opt = getopt(argc, argv, "b:")) != -1) {
@@ -70,13 +70,14 @@ int main(int argc, char* argv[])
 		usage(argv[0]);
 	}
 
+	char buffer[buffer_size];
 	bool is_zero_buffer = false;
 	size_t read_bytes_total = 0;
-    while (true){
-    	size_t read_bytes_in_buffer_count = 0;
+	while (true){
+		size_t read_bytes_in_buffer_count = 0;
 		while (read_bytes_in_buffer_count < buffer_size){
 			ssize_t read_bytes_count = read(fileno(input),
-					buffer + read_bytes_in_buffer_count, 
+				buffer + read_bytes_in_buffer_count, 
 					buffer_size - read_bytes_in_buffer_count);
 	       	if (read_bytes_count == -1){
 				fprintf(stderr, "ERROR: can't read: %s\n", strerror(errno));
@@ -108,7 +109,7 @@ int main(int argc, char* argv[])
 				exit(1);
 			}
 		}
-    }
+	}
 	if (ftruncate(fileno(output), read_bytes_total) == -1){
 		fprintf(stderr, "ERROR: can't truncate: %s\n", strerror(errno));
 		exit(1);	
