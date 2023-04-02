@@ -11,7 +11,7 @@ int main(){
 	for (int i = 0; i < 4 * 1024; ++i){
 		fwrite(zero_buffer, 1, 1024, output);
 	}
-	fseek(output, 4000, SEEK_SET);
+	fseek(output, -1, SEEK_CUR);
 	fwrite(one_buffer, 1, 1, output);
 	fseek(output, 10000, SEEK_SET);
 	fwrite(one_buffer, 1, 1, output);
