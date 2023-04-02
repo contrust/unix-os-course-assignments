@@ -9,9 +9,9 @@
 
 Фактический результат:
 
-fileA actual size: 4198400
-fileA.gz actual size: 8192
-fileB actual size: 12288
-fileB.gz actual size: 8192
-fileC actual size: 12288
-fileD actual size: 16384
+fileA actual size: 4198400 bytes
+fileA.gz actual size: 8192 bytes
+fileB actual size: 12288 bytes
+fileB.gz actual size: 8192 bytes
+fileC actual size: 12288 bytes
+fileD actual size: 16384 bytes
