@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     char pid_str[10];
     sprintf(pid_str, "%d", pid);
     if (write(fd, pid_str, strlen(pid_str)) == -1){
-        fprintf(stderr, "ERROR: can't create a lock file: %s\n", strerror(errno));
+        fprintf(stderr, "ERROR: can't write to the lock file: %s\n", strerror(errno));
         free(lock_filename);
         close_file(fd);
         return 1;
