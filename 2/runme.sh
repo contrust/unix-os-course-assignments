@@ -20,6 +20,7 @@ run_lock_forever()
 }
 
 filename=testfile
+lock_filename="${filename}.lck"
 logfile=successful_locks.log
 
 pids=()
@@ -31,9 +32,9 @@ do
 done
 
 sleep 3
-echo error > $filename
+echo error > $lock_filename
 sleep 1
-rm $filename
+rm $lock_filename
 sleep 296
 
 for pid in ${pids[@]};
