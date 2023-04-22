@@ -54,6 +54,12 @@ int main(int argc, char* argv[])
         return 1;
     }
     sleep(1);
+    if (access(lock_filename, F_OK) == -1){
+        fprintf(stderr, "ERROR: can't access the lock file: %s\n", strerror(errno));
+        free(lock_filename);
+        close_file(fd);
+        return 1;
+    }
     if (lseek(fd, 0, SEEK_SET) == -1){
         fprintf(stderr, "ERROR: can't seek in the lock file: %s\n", strerror(errno));
         free(lock_filename);
@@ -63,12 +69,6 @@ int main(int argc, char* argv[])
     size_t buffer_size = 11;
     char buffer[buffer_size];
     size_t read_bytes_in_buffer_count = 0;
-    if (access(lock_filename, F_OK) == -1){
-        fprintf(stderr, "ERROR: can't access the lock file: %s\n", strerror(errno));
-        free(lock_filename);
-        close_file(fd);
-        return 1;
-    }
     while (read_bytes_in_buffer_count < buffer_size){
         ssize_t read_bytes_count = read(fd, buffer + read_bytes_in_buffer_count, buffer_size - read_bytes_in_buffer_count);
         if (read_bytes_count == -1){
