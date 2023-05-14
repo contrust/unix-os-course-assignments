@@ -1,0 +1,44 @@
+Ожидаемый результат:
+
+После запуска myinit ps сначала выведет три процесса с именами program1.sh, program2.sh и sleep.
+После pkill ps выведет те же имена, только теперь второй процесс будет последним в списке.
+После отправки hup сигнала ps выведет только один процесс.
+В логах сначала создадутся 3 процесса,
+    потом с помощью сигнала будет завершён второй по счёту созданный процесс,
+    потом создатся новый процесс,
+    потом всем процессам будет отправлен kill сигнал,
+    потом создатся только один процесс.
+
+Фактический результат:
+
+gcc myinit.c -o myinit
+ps after the start: 
+
+    PID TTY          TIME CMD
+  27090 ?        00:00:00 program1.sh
+  27091 ?        00:00:00 program2.sh
+  27092 ?        00:00:00 sleep
+
+ps after killing the second process: 
+
+    PID TTY          TIME CMD
+  27090 ?        00:00:00 program1.sh
+  27092 ?        00:00:00 sleep
+  27111 ?        00:00:00 program2.sh
+
+ps after changing the configuration file: 
+
+    PID TTY          TIME CMD
+  27126 ?        00:00:00 program1.sh
+
+the content of the log file: 
+
+Created a child process with 27090 pid.
+Created a child process with 27091 pid.
+Created a child process with 27092 pid.
+The child process with 27091 pid was terminated by a signal.
+Created a child process with 27111 pid.
+A kill signal was sent to the child proccess with 27090 pid.
+A kill signal was sent to the child proccess with 27111 pid.
+A kill signal was sent to the child proccess with 27092 pid.
+Created a child process with 27126 pid.

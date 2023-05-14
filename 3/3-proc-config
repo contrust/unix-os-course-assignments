@@ -1,0 +1,3 @@
+/home/artem/projects/c/unix-os-course-assignments/3/program1.sh world hello /dev/random /dev/null
+/home/artem/projects/c/unix-os-course-assignments/3/program2.sh /home/artem/projects/c/unix-os-course-assignments/3/test-input.txt /home/artem/projects/c/unix-os-course-assignments/3/test-output.txt
+/bin/sleep 300 /dev/random /dev/null
