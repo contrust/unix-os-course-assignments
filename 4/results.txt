@@ -1,0 +1,50 @@
+Ожидаемый результат:
+
+Запустится сервер, потом 3 раза будут запущены 100 тестовых клиентов и ещё один для каждой сотки, который отправит 0 для проверки того, что состояние у сервера - 0.
+Таким образом, проверим первый пункт и частично второй тем, что сервер работает корректно без перезапуска.
+Далее выведется первая и последняя строчка из логов сервера с информацией о подключении.
+Ожидаю, что граница кучи в строках будет одинаковая, потому что в коде сервера не выделяется динамически память, а в последней строке будет файловый дескриптор макисимум 103, 
+потому что 0 - stdin, 1 - stdout, 2 - stderr, 3 - сокет сервера, 4-103 - сокеты клиентов.
+Далее будут выведена эффективная скорость работы сервера в зависимости от задержек и числа клиентов.
+Думаю, что больше всего времени сервер, кроме работы с сокетами клиентов, будет тратить на вывод логов, поэтому количество клиентов главным образом будет влиять на эффективную скорость работы.
+Задержки, думаю, будут меньше влиять на время, особенно с увеличением количества клиентов, потому что так у сервера будет большой выбор, откуда можно что-то прочитать.
+
+Фактический результат:
+
+The output of the 1 client sending a zero:
+Server sent 0
+Total delay is 0.000000 seconds
+
+The output of the 2 client sending a zero:
+Server sent 0
+Total delay is 0.000000 seconds
+
+The output of the 3 client sending a zero:
+Server sent 0
+Total delay is 0.000000 seconds
+
+
+The first connection log record:
+New client connected on fd 4, sbrk=0x7ffe07cc44b0
+
+The last connection log record:
+New client connected on fd 4, sbrk=0x7ffe07cc44b0
+
+Effecient speed of 1 clients with 0 delay: .011735 seconds
+Effecient speed of 1 clients with 0.2 delay: .028923 seconds
+Effecient speed of 1 clients with 0.4 delay: .041726 seconds
+Effecient speed of 1 clients with 0.6 delay: .050369 seconds
+Effecient speed of 1 clients with 0.8 delay: .062632 seconds
+Effecient speed of 1 clients with 1 delay: .064950 seconds
+Effecient speed of 10 clients with 0 delay: .075835 seconds
+Effecient speed of 10 clients with 0.2 delay: .037401 seconds
+Effecient speed of 10 clients with 0.4 delay: .046700 seconds
+Effecient speed of 10 clients with 0.6 delay: .058624 seconds
+Effecient speed of 10 clients with 0.8 delay: .076095 seconds
+Effecient speed of 10 clients with 1 delay: .078727 seconds
+Effecient speed of 100 clients with 0 delay: .084807 seconds
+Effecient speed of 100 clients with 0.2 delay: .108964 seconds
+Effecient speed of 100 clients with 0.4 delay: .108344 seconds
+Effecient speed of 100 clients with 0.6 delay: .151994 seconds
+Effecient speed of 100 clients with 0.8 delay: .173287 seconds
+Effecient speed of 100 clients with 1 delay: .204375 seconds

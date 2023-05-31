@@ -28,6 +28,8 @@ echo -e "\nThe last connection log record:"
 
 grep "New client connected" /tmp/server123.log | tail -n 1
 
+echo ""
+
 kill -1 $server_pid
 
 sleep 0.25
