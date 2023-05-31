@@ -22,11 +22,11 @@ done
 
 echo -e "\nThe first connection log record:"
 
-grep "New client connected" server123.log | head -n 1
+grep "New client connected" /tmp/server123.log | head -n 1
 
 echo -e "\nThe last connection log record:"
 
-grep "New client connected" server123.log | tail -n 1
+grep "New client connected" /tmp/server123.log | tail -n 1
 
 kill -1 $server_pid
 
